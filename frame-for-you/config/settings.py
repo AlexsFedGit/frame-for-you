@@ -17,7 +17,12 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-with open(os.path.join(BASE_DIR, 'config.json')) as config_file:
+if os.path.exists(os.path.join(BASE_DIR, 'config.json')):
+    config_path = os.path.join(BASE_DIR, 'config.json')
+else:
+    config_path = os.path.join(BASE_DIR, 'config-debug.json')
+
+with open(config_path) as config_file:
     config = json.load(config_file)
 
 # Quick-start development settings - unsuitable for production
