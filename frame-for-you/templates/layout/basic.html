@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html style="--bs-primary: #336633;--bs-primary-rgb: 51,102,51;">
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -17,9 +17,10 @@
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
+    {% block css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-light navbar-expand-lg fixed-top navbar-custom" style="/*padding: 0px;*//*background: rgba(245,245,245,0.7);*/">
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top navbar-custom">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}" style="padding: 0px;"><img src="{% static 'assets/img/logo.png' %}" height="65px" width="auto"></a>
             <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navbarResponsive"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
@@ -51,7 +52,7 @@
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.11.1/baguetteBox.min.js"></script>
     <script src="{%  static 'assets/js/script.min.js' %}"></script>
+    {% block script %}{% endblock %}
 </body>
 </html>
