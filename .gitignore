@@ -136,3 +136,6 @@ dmypy.json
 
 # private settings
 config.json
+
+# Static
+public_html/

@@ -1,0 +1,10 @@
+{
+  "SECRET_KEY": "django-insecure-c#-tt*90o&d)pz&t&0s&yvf2+fg!*_v-h0n5p#bp9h*q3@6!mr",
+  "DEBUG": true,
+  "ALLOWED_HOSTS": [
+    "127.0.0.1"
+  ],
+  "DATABASES": {
+    "NAME": "db.sqlite3"
+  }
+}
