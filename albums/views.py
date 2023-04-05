@@ -7,7 +7,7 @@ from albums.models import Album
 class AlbumsList(ListView):
     model = Album
     paginate_by = 20
-    template_name = 'albums/albums_list.html'
+    template_name = 'albums/templates/albums/albums_list.html'
     context_object_name = 'albums'
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -17,5 +17,5 @@ class AlbumsList(ListView):
 
 class AlbumDetail(DetailView):
     model = Album
-    template_name = 'albums/album_detail.html'
+    template_name = 'albums/templates/albums/album_detail.html'
     context_object_name = 'album'
