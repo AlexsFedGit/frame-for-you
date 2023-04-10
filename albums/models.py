@@ -1,11 +1,14 @@
 import os
 
 from django.db import models
+from easy_thumbnails.files import get_thumbnailer
+from slugify import slugify
 
 
 class Album(models.Model):
     title = models.CharField(
-        max_length=255
+        max_length=255,
+        blank=False
     )
     slug = models.SlugField(
         max_length=255,
@@ -24,17 +27,22 @@ class Album(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        return super().save(**kwargs)
+
     def get_uniq_pair(self):
         return f'{self.pk}_{self.slug}'
 
     def get_absolute_url(self):
         pass
 
-    def get_album_cover(self):
-        cover = self.photo_set.all()[0]
-        if cover:
-            return cover.photo.url
-        return 'http://127.0.0.1:8000/static/assets/img/logo.png'
+    def get_album_cover_url(self):
+        photos = self.photo_set.all()
+        if photos:
+            cover = photos[0]
+            return cover.get_thumb_url()
 
     def get_photos_count(self):
         return len(self.photo_set.all())
@@ -59,8 +67,14 @@ class Photo(models.Model):
         upload_to=get_upload_path
     )
 
-    def save(self):
-        super().save()
+    def save(self, **kwargs):
+        super().save(**kwargs)
+
+    def get_thumb_url(self):
+        return get_thumbnailer(self.photo)['preview'].url
 
     class Meta:
         ordering = ['album', 'order']
+
+
+

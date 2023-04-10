@@ -4,20 +4,14 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'assets/css/blueimp-gallery.min.css' %}" />
+<link rel="stylesheet" href="{% static 'assets/css/style.css' %}" />
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
 {% endblock %}
 
 {% block script %}
 <script src="{% static 'assets/js/blueimp-gallery.min.js' %}"></script>
-<script>
-  document.getElementById('links').onclick = function (event) {
-    event = event || window.event
-    var target = event.target || event.srcElement
-    var link = target.src ? target.parentNode : target
-    var options = { index: link, event: event }
-    var links = this.getElementsByTagName('a')
-    blueimp.Gallery(links, options)
-  }
-</script>
+<script src="{% static 'assets/js/main.js' %}" defer></script>
 {% endblock %}
 
 {% block title %}{{ album.title }} :: Наши работы :: {{ block.super }}{% endblock %}
@@ -25,43 +19,7 @@
 {% block masterhead-title %}{{ album.title }}{% endblock %}
 
 {% block content %}
-<div
-  id="blueimp-gallery"
-  class="blueimp-gallery blueimp-gallery-controls"
-  aria-label="image gallery"
-  aria-modal="true"
-  role="dialog"
->
-  <div class="slides" aria-live="polite"></div>
-  <h3 class="title"></h3>
-  <a
-    class="prev"
-    aria-controls="blueimp-gallery"
-    aria-label="previous slide"
-    aria-keyshortcuts="ArrowLeft"
-  ></a>
-  <a
-    class="next"
-    aria-controls="blueimp-gallery"
-    aria-label="next slide"
-    aria-keyshortcuts="ArrowRight"
-  ></a>
-  <a
-    class="close"
-    aria-controls="blueimp-gallery"
-    aria-label="close"
-    aria-keyshortcuts="Escape"
-  ></a>
-  <a
-    class="play-pause"
-    aria-controls="blueimp-gallery"
-    aria-label="play slideshow"
-    aria-keyshortcuts="Space"
-    aria-pressed="false"
-    role="button"
-  ></a>
-  <ol class="indicator"></ol>
-</div>
+{% include 'components/_blueimp_viewer.html' %}
 <section>
     <div></div>
     <div class="row" style="margin: 0px;">
@@ -71,16 +29,51 @@
         </div>
     </div>
 </section>
+<section>
+    <div class="container mt-3">
+        <h2 style="text-align: center">Загрузка фотографий в альбом</h2>
+        <br>
+        <form enctype='multipart/form-data' method='POST' class="dropzone dz" id="my-dropzone" >
+            {% csrf_token %}
+            <div class="fallback">
+              <input name="file" type="file" multiple />
+            </div>
+        </form>
+        <script defer>
+            Dropzone.autoDiscover=false;
+            const myDropzone = new Dropzone('#my-dropzone', {
+                    url: '{% url 'album_photo_update' album.id album.slug %}',
+                    maxFiles: 30,
+                    maxFilesize: 10,
+                    acceptedFiles: 'image/*',
+                    dictDefaultMessage: "Перетащите файлы для загрузки на сайт",
+            })
+        </script>
+    </div>
+</section>
+
+
 <section class="photo-gallery py-4 py-xl-5">
     <div class="container-fluid p-0">
+        {% if album.description %}
         <div class="row g-0 mb-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
                 <p class="w-lg-50">{{ album.description }}</p>
             </div>
         </div>
-        <div class="row g-0 row-cols-1 row-cols-md-2 row-cols-xl-3 photos" id="links">
+        {% endif %}
+        <div class="row g-0 row-cols-1 row-cols-md-2 row-cols-xl-3 photos" id="photo-links">
             {% for photo_item in album.photo_set.all %}
-                <div class="col item"><a href="{{ photo_item.photo.url }}"><img class="img-fluid" src="{{ photo_item.photo.url }}"></a></div>
+                <div class="col item">
+                    <div class="card" style="margin: 5px">
+                        <a href="{{ photo_item.photo.url }}">
+                            <img class="card-img img-fluid w-100" src="{{ photo_item.get_thumb_url }}" />
+                        </a>
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-primary" type="button"><i class="far fa-trash-alt"></i> Удалить</button>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         </div>
     </div>

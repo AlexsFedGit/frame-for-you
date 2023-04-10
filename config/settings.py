@@ -46,9 +46,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'easy_thumbnails',
     'home',
     'albums',
     'articles',
+    'orders',
 ]
 
 MIDDLEWARE = [
@@ -127,7 +129,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+if DEBUG:
+    STATIC_URL = 'static/'
+else:
+    STATIC_URL = '/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'public_html/')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
@@ -139,4 +144,13 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = os.path.join(STATIC_ROOT, 'photos/')
+
 MEDIA_URL = 'photos/'
+
+# Thumbnail params
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'preview': {'size': (600, 350), 'crop': "smart"},
+    },
+}
