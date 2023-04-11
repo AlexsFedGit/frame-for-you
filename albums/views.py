@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -34,7 +35,7 @@ class CreateAlbumView(View):
         return HttpResponseRedirect(reverse('album_detail', args=[album.id, album.slug]))
 
 
-class AlbumPhotoUpdateView(View):
+class AlbumPhotoUpdateView(View, LoginRequiredMixin):
     # POST to add an image
     def get(self, request, pk, slug):
         return JsonResponse({'post': 'false'})
@@ -42,12 +43,10 @@ class AlbumPhotoUpdateView(View):
     def post(self, request, pk, slug):
         try:
             album = Album.objects.get(pk=pk, slug=slug)
-            photos_count = album.get_photos_count()
             photo_file = request.FILES.get('file')
             if photo_file:
-                photo_file.name = f'{photos_count}_{album.slug}.{photo_file.name.split(".")[-1]}'
-                Photo.objects.create(album=album, photo=photo_file, order=photos_count)
-                photos_count += 1
+                photo_file.name = f'photo_{album.slug}.{photo_file.name.split(".")[-1]}'
+                Photo.objects.create(album=album, photo=photo_file)
                 return HttpResponse('')
         except ObjectDoesNotExist:
             return HttpResponse(status=404)

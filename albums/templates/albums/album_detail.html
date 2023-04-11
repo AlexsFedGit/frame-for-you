@@ -29,6 +29,7 @@
         </div>
     </div>
 </section>
+{% if user.is_authenticated %}
 <section>
     <div class="container mt-3">
         <h2 style="text-align: center">Загрузка фотографий в альбом</h2>
@@ -51,6 +52,7 @@
         </script>
     </div>
 </section>
+{% endif %}
 
 
 <section class="photo-gallery py-4 py-xl-5">
@@ -69,9 +71,6 @@
                         <a href="{{ photo_item.photo.url }}">
                             <img class="card-img img-fluid w-100" src="{{ photo_item.get_thumb_url }}" />
                         </a>
-                        <div class="btn-group" role="group">
-                            <button class="btn btn-primary" type="button"><i class="far fa-trash-alt"></i> Удалить</button>
-                        </div>
                     </div>
                 </div>
             {% endfor %}

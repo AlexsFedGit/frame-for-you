@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
-from django.views.generic import View, TemplateView
+from django.views.generic import View, TemplateView, ListView
 
 from .services import *
 
@@ -18,3 +18,13 @@ class AddOrder(View):
 class SuccessOrder(TemplateView):
     template_name = "orders/success.html"
     # url = reverse('home')
+
+
+class ContactsCreateOrderView(TemplateView):
+    template_name = 'orders/create_order.html'
+
+
+class OrdersList(ListView):
+    model = Order
+    template_name = 'orders/orders_list.html'
+

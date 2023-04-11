@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>Ваша заявка принята</h1>
-</body>
-</html>
+{% extends 'layout/basic.html' %}
+
+{% load static %}
+
+{% block title %}Заявка :: {{ block.super }}{% endblock %}
+
+{% block masterhead-title %}Ваша заявка принята{% endblock %}
+
+{#{% block masterhead-content %}#}
+{#<div class="container">#}
+{#    <a class="btn btn-primary btn-xl rounded-pill mt-5" role="button" href="{% url 'albums_list' %}">Наши работы</a>#}
+{#</div>#}
+{#{% endblock %}#}
+
+{% block content %}
+<section>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 order-lg-2">
+                <div class="p-5"><img class="rounded-circle img-fluid" src="{% static 'assets/img/03.jpg' %}" alt="О нас третье"/></div>
+            </div>
+            <div class="col-lg-6 order-lg-1">
+                <div class="p-5">
+                    <h2 class="display-4"><strong>В скором времени мы Вам перезвоним</strong>!</h2><br>
+                    <a class="btn btn-primary btn-lg" href="{% url 'home' %}">На главную</a>
+                    <a class="btn btn-primary btn-lg" href="{% url 'albums_list' %}">Смотреть альбом наших работ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
