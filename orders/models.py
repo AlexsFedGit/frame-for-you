@@ -29,4 +29,4 @@ class Order(models.Model):
     class Meta:
         verbose_name = 'заказ'
         verbose_name_plural = 'заказы'
-        ordering = ['-created_at']
+        ordering = ['is_confirmed', '-created_at']

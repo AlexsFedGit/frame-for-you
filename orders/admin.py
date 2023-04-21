@@ -5,7 +5,7 @@ from .models import Order
 
 class OrderAdmin(admin.ModelAdmin):
     # fields = ['created_at',]
-    list_display = ('created_at', 'name', 'contact', 'message', 'is_confirmed')
+    list_display = ('is_confirmed', 'created_at', 'name', 'contact', 'message')
     readonly_fields = ('created_at', 'name', 'contact', 'message')
     list_filter = ('is_confirmed', 'created_at')
 

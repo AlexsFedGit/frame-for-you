@@ -23,6 +23,12 @@ class SuccessOrder(TemplateView):
 class ContactsCreateOrderView(TemplateView):
     template_name = 'orders/create_order.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        orders_count = len(Order.objects.filter(is_confirmed=False))
+        context['orders_count'] = orders_count
+        return context
+
 
 class OrdersList(ListView):
     model = Order
