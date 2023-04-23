@@ -7,6 +7,10 @@ from easy_thumbnails.files import get_thumbnailer
 from slugify import slugify
 
 
+def get_cover_upload_path(instance, filename):
+    return os.path.join(instance.get_uniq_pair(), filename)
+
+
 class Album(models.Model):
     title = models.CharField(
         max_length=255,
@@ -29,6 +33,11 @@ class Album(models.Model):
         auto_now=True,
         verbose_name='изменено',
     )
+    cover = models.ImageField(
+        upload_to=get_cover_upload_path,
+        verbose_name='файл',
+        blank=True,
+    )
 
     def __str__(self):
         return self.title
@@ -43,6 +52,18 @@ class Album(models.Model):
         shutil.rmtree(album_dir_path)
         super().delete(**kwargs)
 
+    def delete_cover(self):
+        if not self.cover:
+            return None
+
+        preview_path = get_thumbnailer(self.cover)['preview'].file.name
+        if os.path.exists(preview_path):
+            os.remove(preview_path)
+
+        image_path = self.cover.path
+        if os.path.exists(image_path):
+            os.remove(image_path)
+
     def get_uniq_pair(self):
         return f'{self.pk}_{self.slug}'
 
@@ -50,6 +71,9 @@ class Album(models.Model):
         pass
 
     def get_album_cover_url(self):
+        if self.cover:
+            return get_thumbnailer(self.cover)['preview'].url
+
         photos = self.photo_set.all()
         if photos:
             cover = photos[0]

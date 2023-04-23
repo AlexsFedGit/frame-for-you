@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
@@ -8,6 +10,7 @@ from django.views.generic import ListView, DetailView
 
 from albums.models import Album, Photo
 from .services import create_album
+
 
 class AlbumsList(ListView):
     model = Album
@@ -47,6 +50,28 @@ class AlbumPhotoUpdateView(View, LoginRequiredMixin):
             if photo_file:
                 photo_file.name = f'photo_{album.slug}.{photo_file.name.split(".")[-1]}'
                 Photo.objects.create(album=album, photo=photo_file)
+                return HttpResponse('')
+        except ObjectDoesNotExist:
+            return HttpResponse(status=404)
+        return HttpResponse(
+            '<h1>500 Internal Server Error (Внутренняя ошибка сервера)</h1>',
+            status=500)
+
+
+class AlbumUpdateCoverView(View, LoginRequiredMixin):
+    # POST to add an image
+    def get(self, request, pk, slug):
+        return JsonResponse({'post': 'false'})
+
+    def post(self, request, pk, slug):
+        try:
+            album = Album.objects.get(pk=pk, slug=slug)
+            photo_file = request.FILES.get('file')
+            if photo_file:
+                album.delete_cover()
+                photo_file.name = f'cover_{album.slug}.{photo_file.name.split(".")[-1]}'
+                album.cover = photo_file
+                album.save()
                 return HttpResponse('')
         except ObjectDoesNotExist:
             return HttpResponse(status=404)

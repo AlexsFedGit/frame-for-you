@@ -32,24 +32,48 @@
 {% if user.is_authenticated %}
 <section>
     <div class="container mt-3">
-        <h2 style="text-align: center">Загрузка фотографий в альбом</h2>
-        <br>
-        <form enctype='multipart/form-data' method='POST' class="dropzone dz" id="my-dropzone" >
-            {% csrf_token %}
-            <div class="fallback">
-              <input name="file" type="file" multiple />
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <h2 style="text-align: center">Смена обложки альбома</h2>
+                <br>
+                <form enctype='multipart/form-data' method='POST' class="dropzone dz" id="cover-dropzone" >
+                    {% csrf_token %}
+                    <div class="fallback">
+                      <input name="file" type="file" multiple />
+                    </div>
+                </form>
+                <script defer>
+                    Dropzone.autoDiscover=false;
+                    const coverDropzone = new Dropzone('#cover-dropzone', {
+                            url: '{% url 'album_update_cover' album.id album.slug %}',
+                            maxFiles: 1,
+                            maxFilesize: 10,
+                            acceptedFiles: 'image/*',
+                            dictDefaultMessage: "Перетащите файлы для смены обложки",
+                    })
+                </script>
             </div>
-        </form>
-        <script defer>
-            Dropzone.autoDiscover=false;
-            const myDropzone = new Dropzone('#my-dropzone', {
-                    url: '{% url 'album_photo_update' album.id album.slug %}',
-                    maxFiles: 30,
-                    maxFilesize: 10,
-                    acceptedFiles: 'image/*',
-                    dictDefaultMessage: "Перетащите файлы для загрузки на сайт",
-            })
-        </script>
+            <div class="col">
+                <h2 style="text-align: center">Загрузка фотографий в альбом</h2>
+                <br>
+                <form enctype='multipart/form-data' method='POST' class="dropzone dz" id="my-dropzone" >
+                    {% csrf_token %}
+                    <div class="fallback">
+                      <input name="file" type="file" multiple />
+                    </div>
+                </form>
+                <script defer>
+                    Dropzone.autoDiscover=false;
+                    const myDropzone = new Dropzone('#my-dropzone', {
+                            url: '{% url 'album_photo_update' album.id album.slug %}',
+                            maxFiles: 30,
+                            maxFilesize: 10,
+                            acceptedFiles: 'image/*',
+                            dictDefaultMessage: "Перетащите файлы для загрузки на сайт",
+                    })
+                </script>
+            </div>
+        </div>
     </div>
 </section>
 {% endif %}
